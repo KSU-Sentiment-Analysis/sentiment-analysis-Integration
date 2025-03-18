@@ -84,14 +84,3 @@ The backend runs on **http://localhost:5000**.
 - **Transformers (Hugging Face)** (Sentiment analysis models)
 - **Flask-CORS** (Cross-origin requests)
 
----
-
-# **🚀 Next Steps**
-✅ Ensure the frontend & backend are correctly connected.
-✅ Configure **Power BI authentication** to embed the dashboard.
-✅ Deploy the application (e.g., **AWS, Azure, or Heroku**).
-
-🎯 **For any issues, check logs in Flask (`server.py`) & React (`F12 Console`).**
-
-🚀 Happy Coding! 🔥
-
