@@ -10,7 +10,7 @@ def load_advanced_models():
         model="cardiffnlp/twitter-roberta-base-sentiment",
         device=0  # Use GPU (cuda:0) or set to -1 if u dont have dedicated gpu
     )
-    print("✅ Advanced sentiment model loaded: cardiffnlp/twitter-roberta-base-sentiment")
+    print("Advanced sentiment model loaded: cardiffnlp/twitter-roberta-base-sentiment")
 
     emotion_model = pipeline(
         "text-classification",
@@ -18,7 +18,7 @@ def load_advanced_models():
         top_k=None,
         device=0  # Use GPU (cuda:0) or set to -1 if u dont have dedicated gpu
     )
-    print("✅ Emotion detection model loaded: j-hartmann/emotion-english-distilroberta-base")
+    print("Emotion detection model loaded: j-hartmann/emotion-english-distilroberta-base")
 
     return sentiment_model, emotion_model
 

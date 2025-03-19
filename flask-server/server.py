@@ -56,12 +56,12 @@ def upload_file():
         processed_file_path = os.path.join(PROCESSED_FOLDER, file.filename)  # Keep original filename
         df.to_csv(processed_file_path, index=False)
 
-        print(f"✅ Processed file saved: {processed_file_path}")
+        print(f"Processed file saved: {processed_file_path}")
         return send_file(processed_file_path, mimetype="text/csv", as_attachment=True, download_name="processed_results.csv")
 
     except Exception as e:
         import traceback
-        print("❌ Error processing file:", e)
+        print("Error processing file:", e)
         traceback.print_exc()
         return f"Internal server error: {e}", 500
 
@@ -72,13 +72,13 @@ def get_sentiment_data():
         return jsonify({"error": "Dataset name is required"}), 400
 
     available_files = os.listdir(PROCESSED_FOLDER)
-    print(f"📂 Available Datasets in processed/: {available_files}")  # Debugging log
-    print(f"🔎 Requested Dataset: {dataset_name}")  # Debugging log
+    print(f"Available Datasets in processed/: {available_files}")  # Debugging log
+    print(f"Requested Dataset: {dataset_name}")  # Debugging log
 
     dataset_path = os.path.join(PROCESSED_FOLDER, dataset_name)
 
     if not os.path.exists(dataset_path):
-        print(f"❌ Dataset '{dataset_name}' not found!")  # Debugging log
+        print(f"Dataset '{dataset_name}' not found!")  # Debugging log
         return jsonify({"error": f"Dataset '{dataset_name}' not found"}), 404
 
     try:
