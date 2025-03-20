@@ -71,12 +71,12 @@ def upload_file():
         processed_file_path = os.path.join(PROCESSED_FOLDER, file.filename)
         df.to_csv(processed_file_path, index=False)
 
-        print(f"✅ Processed file saved: {processed_file_path}")
+        print(f"Processed file saved: {processed_file_path}")
         return send_file(processed_file_path, mimetype="text/csv", as_attachment=True, download_name="processed_results.csv")
 
     except Exception as e:
         import traceback
-        print("❌ Error processing file:", e)
+        print("Error processing file:", e)
         traceback.print_exc()
         return f"Internal server error: {e}", 500
 
@@ -163,7 +163,7 @@ def generate_responses():
         })
 
     except Exception as e:
-        print(f"❌ Error during GPT response generation: {e}")
+        print(f"Error during GPT response generation: {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
