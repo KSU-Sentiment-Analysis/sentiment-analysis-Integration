@@ -37,7 +37,7 @@ def detect_sarcasm(text):
 
 def aspect_analysis(text):
     """
-    Aspect based analyussis simple but it kind works!
+    Aspect based analyussis simple but it kinda works!
     """
     aspects = {}
     aspect_keywords = {

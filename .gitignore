@@ -8,3 +8,6 @@ uploads/
 *.log
 *.tmp
 .DS_Store
+.idea
+outputs
+processed
