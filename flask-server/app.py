@@ -8,7 +8,7 @@ from dataset_handler import process_data
 from pre_trained_models import load_fast_sentiment_model, load_accurate_sentiment_model
 from custom_models import load_custom_model, train_and_save_model_from_data
 from advanced_sentiment import analyze_reviews
-from deep_pipeline import run_full_deep_analysis, predict_single_review  # ✅ added
+from deep_pipeline import run_full_deep_analysis, predict_single_review
 
 app = Flask(__name__)
 
@@ -337,6 +337,7 @@ def download_file(filename):
         return jsonify({"error": f"File not found: {str(e)}"}), 404
 
 
+# run it local :) need to do the production grade server thing not sure
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
 
