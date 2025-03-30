@@ -5,17 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ca30865-1c89-4184-98c3-5b03b7dda0ce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/flask-server/advanced_emotion.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask-server/advanced_sarcasm.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask-server/advanced_sentiment2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask-server/deep_pipeline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask-server/advanced_sentiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/flask-server/advanced_sentiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask-server/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/flask-server/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask-server/dataset_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/flask-server/dataset_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask-server/test_csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/flask-server/test_csv.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -239,7 +229,7 @@
       <workItem from="1743066503623" duration="3919000" />
       <workItem from="1743070532727" duration="15360000" />
       <workItem from="1743094317658" duration="8343000" />
-      <workItem from="1743339181900" duration="1689000" />
+      <workItem from="1743339181900" duration="2434000" />
     </task>
     <servers />
   </component>
