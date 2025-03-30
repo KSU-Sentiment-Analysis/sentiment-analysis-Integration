@@ -50,24 +50,10 @@ def fuzzy_match_column(df, column_type):
     """
     Finds the best-matching column name in the dataset using fuzzy matching,
     ensuring proper filtering of unwanted columns and prioritizing known correct names.
-    :param df: DataFrame containing dataset columns
-    :param column_type: Type of column to search for ('review_text' or 'rating')
-    :return: Best matched column name or None if no match found
     """
     if column_type not in EXPECTED_COLUMNS:
         return None
 
-    # before we use fuzzy wusy just gonna do a manual check just in case we can save reousrcez.
-    #for col in df.columns:
-    #    col_clean = col.lower().replace(" ", "_")
-    #    if column_type == "review_text" and col_clean == "review_text":
-    #        print(f"Manually select '{col}' as the review text column.")
-    #        return col
-    #    if column_type == "rating" and col_clean == "rating":
-    #        print(f"Manually select '{col}' as the rating column.")
-    #        return col
-
-    # now we use fuzzy wuszzy
     best_match = None
     highest_score = 0
 
@@ -78,11 +64,10 @@ def fuzzy_match_column(df, column_type):
         if "name" in col_clean or "count" in col_clean or "profile" in col_clean:
             continue
 
-        # here is where we extractr best matching words fuzzywuzzy
         match_result = process.extractOne(col_clean, EXPECTED_COLUMNS[column_type])
         if match_result:
             match, score = match_result
-            if score > highest_score and score >= 80:  # 80% confidence threshold might need to expierment but it works so far
+            if score > highest_score and score >= 80:
                 best_match = col
                 highest_score = score
 
@@ -91,13 +76,7 @@ def fuzzy_match_column(df, column_type):
 
 def extract_numeric_rating(rating_text):
     """
-    Extracts a numerical rating from a text-based rating string. basically a whole bunch of batter detection
-
-    Works for:
-      - "Rated 5 out of 5 stars" → 5
-      - "Score: 3.5" → 3.5
-    :param rating_text: Raw text from the rating column
-    :return: Extracted numerical rating (float) or NaN if extraction fails
+    Extracts a numerical rating from a text-based rating string.
     """
     rating_text = str(rating_text).lower().strip()
     match = re.search(r"(\d+)\s*(?:out\s*of|\/)\s*\d+", rating_text)
@@ -112,22 +91,17 @@ def extract_numeric_rating(rating_text):
 
 def process_data(df):
     """
-    Here is where i process the fuzzy matches words to standerize so our models can use them
-
-    :param df: Pandas DataFrame containing the dataset
-    :return: Processed DataFrame with standardized column names and only necessary columns
+    Here is where i process the fuzzy matches words to standerize the dataset so our models can use them without any isses
     """
     if df is None:
         print("No data to process!")
         return None
 
-    # Identifying col dynamically
     column_mapping = {
         "review_text": fuzzy_match_column(df, "review_text"),
         "rating": fuzzy_match_column(df, "rating")
     }
 
-    #failure condition just in case we cant find any matches
     if not column_mapping["review_text"]:
         print("No suitable text column found for reviews.")
         print("Available columns:", df.columns.tolist())
@@ -136,29 +110,35 @@ def process_data(df):
     if not column_mapping["rating"]:
         print("No rating column found. Proceeding without ratings.")
 
-    # Extracting and copying relvant colms
     selected_columns = {key: col for key, col in column_mapping.items() if col}
     df_cleaned = df[list(selected_columns.values())].copy()
 
-    # Reverse mapping the keys
     reverse_mapping = {v: k for k, v in selected_columns.items()}
     df_cleaned.rename(columns=reverse_mapping, inplace=True)
+
     print("Renamed Columns:", df_cleaned.columns.tolist())
 
-    # Dropping missing values in 'review_text' cause that would be bad if we send them in
+    # Drop missing or empty review_text rows
     if "review_text" in df_cleaned.columns:
+        df_cleaned["review_text"] = df_cleaned["review_text"].astype(str).str.strip()
+        df_cleaned = df_cleaned[df_cleaned["review_text"] != ""]
         df_cleaned.dropna(subset=["review_text"], inplace=True)
     else:
         print("'review_text' column not found after renaming!")
 
     if "rating" in df_cleaned.columns:
+        # Normalize rating column before converting to int
         df_cleaned["rating"] = df_cleaned["rating"].apply(extract_numeric_rating)
         df_cleaned.dropna(subset=["rating"], inplace=True)
-        # Convert rating to int if possible
+
+        # Drop ratings outside 1–5 range
+        df_cleaned = df_cleaned[df_cleaned["rating"].between(1, 5)]
         df_cleaned["rating"] = df_cleaned["rating"].astype(int)
 
     print(f"Review Text Column: {column_mapping['review_text']}")
     print(f"Rating Column: {column_mapping['rating'] if column_mapping['rating'] else 'Not Found'}")
+    print(f"[Processed Data Shape]: {df_cleaned.shape}")
+    print(df_cleaned["rating"].value_counts())
     print("\nFirst 5 rows of processed data:\n", df_cleaned.head())
 
     return df_cleaned

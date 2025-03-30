@@ -12,6 +12,8 @@ PROCESSED_FOLDER = "processed"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
+# Need to bring over other stuff from app.py
+
 @app.route("/upload", methods=["POST"])
 def upload_file():
     try:
