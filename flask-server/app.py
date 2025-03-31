@@ -189,7 +189,7 @@ def index():
     """
     return html
 
-
+#upload csv
 @app.route("/upload", methods=["POST"])
 def upload_csv():
     if 'file' not in request.files:
@@ -204,7 +204,7 @@ def upload_csv():
     file.save(saved_path)
     return jsonify({"message": "File successfully uploaded", "file_path": os.path.abspath(saved_path)})
 
-
+# all the options avalible that we can pull from each process options runs on its own
 @app.route("/process", methods=["POST"])
 def process_dataset():
     data = request.get_json()
@@ -283,7 +283,7 @@ def process_dataset():
 
     elif process_type == "advanced_pretrained":
         try:
-            # 🔁 Run deep analysis in inference mode
+            #Run deep analysis in inference mode
             output_csv, metrics_json = run_full_deep_analysis(file_path, app.config["OUTPUT_FOLDER"], retrain=False)
             return jsonify({
                 "message": "Advanced pretrained inference complete",
@@ -315,7 +315,7 @@ def process_dataset():
     processed_df.to_csv(output_path, index=False)
     return jsonify({"message": "Processing complete", "output_file": os.path.abspath(output_path)})
 
-
+# here it predict single given one review text and rating
 @app.route("/predict", methods=["POST"])
 def predict_single():
     data = request.get_json()
@@ -328,7 +328,7 @@ def predict_single():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
+# downloads the file
 @app.route("/download/<path:filename>", methods=["GET"])
 def download_file(filename):
     try:
@@ -337,7 +337,7 @@ def download_file(filename):
         return jsonify({"error": f"File not found: {str(e)}"}), 404
 
 
-# run it local :) need to do the production grade server thing not sure
+# run it local :) need to do the production grade server thing not sure...
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
 
