@@ -1,70 +1,97 @@
-# Getting Started with Create React App
+# Sentiment Analysis Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+This project consists of a **React frontend** and a **Flask backend** to analyze sentiment in textual data. It integrates **Power BI** for visualization and provides a web-based UI for uploading, processing, and retrieving datasets.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+# 🔹 Frontend (React)
 
-### `npm start`
+## **Setup Instructions**
+### **1️⃣ Install Dependencies**
+Run the following command inside the frontend folder:
+```sh
+npm install
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### **2️⃣ Start the React App**
+```sh
+npm start
+```
+The app runs on **http://localhost:3000**.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## **Features**
+✅ Upload CSV files containing text data
+✅ Process sentiment analysis via Flask API
+✅ Store and select previous datasets
+✅ Embed Power BI dashboard for visualization
 
-### `npm test`
+## **Tech Stack**
+- **React.js**
+- **Material UI** (for UI components)
+- **Axios** (for API calls)
+- **PapaParse** (for CSV parsing)
+- **Power BI SDK** (for report embedding)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## **Power BI Integration**
+1. **Publish your Power BI report** to Power BI Service.
+2. **Get the Embed URL** from Power BI.
+3. **Update `SentimentAnalysis.js`** with the correct **Embed URL, Report ID, and Access Token**.
 
-### `npm run build`
+```javascript
+const embedConfig = {
+    type: "report",
+    id: "YOUR_REPORT_ID",
+    embedUrl: "YOUR_POWERBI_EMBED_URL",
+    accessToken: "YOUR_ACCESS_TOKEN",
+    tokenType: models.TokenType.Embed,
+};
+```
+4. **Restart React App** (`npm start`).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# 🔹 Backend (Flask)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## **Setup Instructions**
+### **1️⃣ Install Dependencies**
+Inside the backend folder, run:
+```sh
+pip install -r requirements.txt
+```
 
-### `npm run eject`
+### **2️⃣ Start the Flask Server**
+```sh
+python server.py
+```
+The backend runs on **http://localhost:5000**.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## **API Endpoints**
+### **Upload & Process CSV**
+- **Endpoint:** `POST /upload`
+- **Description:** Uploads a CSV file and performs sentiment analysis.
+- **Request:** FormData (`file` key with CSV file)
+- **Response:** Processed CSV file as download.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### **Retrieve Processed Data**
+- **Endpoint:** `GET /api/sentiment?dataset=processed_<filename>.csv`
+- **Description:** Returns sentiment analysis results for a selected dataset.
+- **Response:** JSON containing sentiment scores.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## **Tech Stack**
+- **Flask** (Python backend framework)
+- **Pandas** (Data handling)
+- **Transformers (Hugging Face)** (Sentiment analysis models)
+- **Flask-CORS** (Cross-origin requests)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+# **🚀 Next Steps**
+✅ Ensure the frontend & backend are correctly connected.
+✅ Configure **Power BI authentication** to embed the dashboard.
+✅ Deploy the application (e.g., **AWS, Azure, or Heroku**).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+🎯 **For any issues, check logs in Flask (`server.py`) & React (`F12 Console`).**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+🚀 Happy Coding! 🔥
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

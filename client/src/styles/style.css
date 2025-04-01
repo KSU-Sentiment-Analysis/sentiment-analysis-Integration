@@ -1,0 +1,198 @@
+:root {
+    --primary-blue: #004aad;
+    --gray-text: #6f6d6d;
+    --light-gray-bg: #e7e6e6;
+    --card-bg: #ffffff;
+    --quote-color: #828282;
+    --shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Inter', Helvetica, sans-serif;
+    background-color: var(--light-gray-bg);
+  }
+  
+  .homepage {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .homepage .div {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+  
+  /* Header */
+  .welcome-header {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #000;
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .welcome-subtitle {
+    font-size: 1.25rem;
+    color: var(--gray-text);
+    font-style: italic;
+    text-align: center;
+    max-width: 600px;
+  }
+  
+  /* Cards Title */
+  .customer-reviews {
+    font-size: 2rem;
+    color: var(--primary-blue);
+    font-weight: 600;
+    text-align: left;
+    width: 100%;
+  }
+  
+  /* Review Cards */
+  .review-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .customer-quote,
+  .customer-quote-2,
+  .customer-quote-3 {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    flex: 1 1 calc(33% - 20px);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    min-width: 280px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .text-wrapper {
+    font-size: 1.25rem;
+    font-style: italic;
+    margin-top: 10px;
+    text-align: center;
+    color: #000;
+  }
+  
+  .quote {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-top: 10px;
+  }
+  
+  .untitled-design {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-top: 10px;
+  }
+  
+  .frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 12px;
+  }
+  
+  .text-wrapper-2 {
+    font-weight: 600;
+  }
+  
+  .text-wrapper-3 {
+    font-size: 0.9rem;
+    color: var(--quote-color);
+  }
+  
+  /* Metrics & Dataset Sections */
+  .alerts-metric,
+  .dataset-vs-dataset {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    flex: 1 1 48%;
+    box-sizing: border-box;
+  }
+  
+  .alerts-metric-title,
+  .dataset-vs-dataset-2 {
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  
+  .p,
+  .dataset-vs-dataset-3 {
+    text-align: center;
+    color: var(--gray-text);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  
+  .high-risk,
+  .map {
+    display: block;
+    margin: 0 auto;
+    width: 48px;
+    height: 48px;
+  }
+  
+  /* Section Container */
+  .metric-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  /* Footer */
+  .footer {
+    font-size: 0.9rem;
+    color: #706e6e;
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .review-cards,
+    .metric-section {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .customer-quote,
+    .customer-quote-2,
+    .customer-quote-3,
+    .alerts-metric,
+    .dataset-vs-dataset {
+      width: 100%;
+    }
+  
+    .welcome-header {
+      font-size: 2rem;
+    }
+  
+    .customer-reviews {
+      text-align: center;
+    }
+  }
+  

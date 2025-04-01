@@ -1,97 +1,174 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Grid, Paper, Typography, Button } from '@mui/material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { motion } from 'framer-motion';
-import { Box } from "@mui/material";
+import React from "react";
+import heartspeakIcon from "../assets/heartspeak-icon.png";
+import icons8DayAndNight501 from "../assets/icons8-day-and-night-50-1.png";
+import icons8HighRisk501 from "../assets/icons8-high-risk-50-1.png";
+import icons8Map501 from "../assets/icons8-map-50-1.png";
+import icons8Quote4812 from "../assets/icons8-quote-48-1-2.png";
+import icons8Quote481 from "../assets/icons8-quote-48-1.png";
+import image from "../assets/image.png";
+import '../styles/style.css';
+import untitledDesign12 from "../assets/untitled-design-1-2.png";
+import untitledDesign13 from "../assets/untitled-design-1-3.png";
+import untitledDesign1 from "../assets/untitled-design-1.png";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 
 const reviews = [
-    { name: "John Doe", rating: "⭐⭐⭐⭐⭐", review: "Amazing experience! The service was top-notch, highly recommend it." },
-    { name: "Jane Smith", rating: "⭐⭐⭐⭐", review: "Great quality and friendly support. A little pricey, but worth it!" },
-    { name: "Michael Johnson", rating: "⭐⭐⭐⭐⭐", review: "Fast delivery and outstanding customer service. Would buy again!" },
-    { name: "Emily Davis", rating: "⭐⭐⭐", review: "Decent experience. Some things could be improved, but overall not bad." },
-    { name: "Robert Wilson", rating: "⭐⭐", review: "Not great. Had issues with delivery and support was slow to respond." },
-    { name: "Sarah Thompson", rating: "⭐", review: "Terrible experience! Would not recommend. Customer service was unhelpful." }
+    {
+        text: "Heartspeak AI helped us identify user sentiment in real-time. Amazing tool!",
+        name: "Jasmine Patel",
+        role: "Product Manager",
+        quote: icons8Quote481,
+        image: untitledDesign1,
+      },
+      {
+        text: "A user-friendly interface and insightful analytics. Highly recommend.",
+        name: "Carlos Rivera",
+        role: "UX Designer",
+        quote: icons8Quote4812,
+        image: untitledDesign13,
+      },
+      {
+        text: "The sentiment tracking feature gave us a new level of customer insight.",
+        name: "Elena Smith",
+        role: "Marketing Director",
+        quote: image,
+        image: untitledDesign12,
+      },
+      {
+        text: "Our feedback loop has become much faster and more accurate since using Heartspeak.",
+        name: "Daniel Kim",
+        role: "Customer Experience Lead",
+        quote: icons8Quote481,
+        image: untitledDesign1,
+      },
+      {
+        text: "Exceptional support and great results. It transformed our communication strategy.",
+        name: "Leila Zhang",
+        role: "Operations Manager",
+        quote: icons8Quote4812,
+        image: untitledDesign13,
+      },
 ];
 
 const ReviewSlider = () => {
     const [index, setIndex] = useState(0);
-
+  
     useEffect(() => {
-        const interval = setInterval(() => {
-            setIndex(prevIndex => (prevIndex === reviews.length - 1 ? 0 : prevIndex + 1));
-        }, 5000);
-        return () => clearInterval(interval);
+      const interval = setInterval(() => {
+        setIndex((prev) => (prev + 1) % reviews.length);
+      }, 5000);
+      return () => clearInterval(interval);
     }, []);
-
-    const prevReview = () => setIndex(index === 0 ? reviews.length - 1 : index - 1);
-    const nextReview = () => setIndex(index === reviews.length - 1 ? 0 : index + 1);
-
+  
+    const current = reviews[index];
+  
     return (
-        <Paper sx={{ p: 3, textAlign: 'center', mt: 3, boxShadow: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>What Customers Say</Typography>
-            <motion.div
-                key={index}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5 }}
-            >
-                <Typography variant="h6">{reviews[index].name}</Typography>
-                <Typography sx={{ color: 'gold', fontSize: '1.2rem' }}>{reviews[index].rating}</Typography>
-                <Typography variant="body1" sx={{ mt: 1 }}>{reviews[index].review}</Typography>
-            </motion.div>
-            <div style={{ marginTop: '10px' }}>
-                <Button onClick={prevReview} sx={{ mx: 1 }}><ChevronLeft /></Button>
-                <Button onClick={nextReview} sx={{ mx: 1 }}><ChevronRight /></Button>
-            </div>
-        </Paper>
-    );
-};
-
-const Home = () => {
-    return (
-        <Container maxWidth="lg">
-            {/* Centered Page Title */}
-            <Box
-                sx={{
-                    textAlign: "center",
-                    padding: "20px 0",
+      <div
+        className="review-slider"
+        style={{
+          width: "100%", 
+          maxWidth: 1600, 
+          margin: "0 auto", 
+          position: "relative"
+        }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              background: "#fff",
+              borderRadius: "10px",
+              padding: "24px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              gap: "20px",
+            }}
+          >
+            {/* Left: Image + Quote */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+            <img
+                src={current.quote}
+                alt="Quote"
+                style={{
+                  height: 28,
+                  opacity: 0.9,
                 }}
-            >
-                <Typography variant="h4" fontWeight="bold" color="primary">
-                    HeartSpeak AI
-                </Typography>
-            </Box>
+              />
+              <img
+                src={current.image}
+                alt={current.name}
+                style={{
+                  width: 70,
+                  height: 70,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            </div>
+  
+            {/* Center: Quote Text */}
+            <div style={{ flex: 1 }}>
+              <p style={{ fontStyle: "italic", fontSize: "1rem", color: "#000", marginBottom: "12px" }}>
+                {current.text}
+              </p>
+  
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontWeight: 600, color: "#000" }}>{current.name}</div>
+                <div style={{ fontSize: "0.9rem", color: "#828282" }}>{current.role}</div>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    );
+  };
 
-            {/* Review Slider Section */}
-            <ReviewSlider />
 
-            {/* Page Content */}
-            <Grid container spacing={3} sx={{ mt: 2 }}>
-                {/* Alerts & Performance */}
-                <Grid item xs={6}>
-                    <Paper sx={{ p: 2, height: '150px' }}>
-                        <Typography variant="h6">Alerts / Performance Metrics</Typography>
-                        <Typography variant="body2">Placeholder for alerts and key performance insights.</Typography>
-                    </Paper>
-                </Grid>
+export const Homepage = () => {
+    return (
+        <div className="homepage">
+            <div className="div">
 
-                {/* Dataset Map */}
-                <Grid item xs={6}>
-                    <Paper sx={{ p: 2, height: '150px' }}>
-                        <Typography variant="h6">Dataset vs Dataset Map</Typography>
-                        <Typography variant="body2">Map visualization placeholder.</Typography>
-                    </Paper>
-                </Grid>
-            </Grid>
+                
+            <div className="welcome-header">Welcome to Heartspeak AI</div>
 
-            {/* Default View Info */}
-            <Paper sx={{ mt: 3, p: 2, textAlign: 'center' }}>
-                <Typography variant="h6">Default View:</Typography>
-                <Typography variant="body1">Powered by Azure Power BI (Embedded)</Typography>
-            </Paper>
-        </Container>
+            <p className="welcome-subtitle">
+                Analyze emotions, visualize trends, and generate intelligent
+                feedback—all in one platform.
+            </p>
+
+                
+                
+                <div className="metric-section">
+                    <div className="alerts-metric">
+                        <div className="alerts-metric-title">Alerts/Metric</div>
+                        <p className="p">Real-time sentiment metrics will appear here.</p>
+                        <img className="high-risk" alt="High risk" src={icons8HighRisk501} />
+                    </div>
+
+                    <div className="dataset-vs-dataset">
+                        <div className="dataset-vs-dataset-2">Dataset vs Dataset Map</div>
+                        <p className="dataset-vs-dataset-3">
+                            Visual comparisons of datasets go here.
+                        </p>
+                        <img className="map" alt="Map" src={icons8Map501} />
+                    </div>
+                </div>
+
+                <div className="customer-reviews">Customer Reviews</div>
+
+                <div className="review-cards">
+                    <ReviewSlider />
+                </div>
+
+                <p className="footer">© 2025 Heartspeak AI. All rights reserved.</p>
+            </div>
+        </div>
     );
 };
-
-export default Home;

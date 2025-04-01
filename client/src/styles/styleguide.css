@@ -1,0 +1,68 @@
+:root {
+    --button-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+    --colors-border-border-default: var(--colors-border-default-default);
+    --colors-border-default-default: var(--colors-grey-200);
+    --colors-grey-200: rgba(230, 230, 230, 1);
+    --colors-grey-600: rgba(68, 68, 68, 1);
+    --small-text-font-family: "Inter", Helvetica;
+    --small-text-font-size: 16px;
+    --small-text-font-style: normal;
+    --small-text-font-weight: 500;
+    --small-text-letter-spacing: 0px;
+    --small-text-line-height: 150%;
+    --variable-collection-boolean: initial;
+    --variable-collection-spacing-m: 48px;
+    --variable-collection-spacing-SM: 32px;
+}
+
+/*
+
+To enable a theme in your HTML, simply add one of the following data attributes to an HTML element, like so:
+
+<body data-colors-mode="light">
+        <!-- the rest of your content -->
+</body>
+
+You can apply the theme on any DOM node, not just the `body`
+
+*/
+
+[data-colors-mode="light"] {
+    --colors-border-default-default: var(--colors-grey-200);
+}
+
+[data-colors-mode="dark"] {
+    --colors-border-default-default: var(--colors-grey-600);
+}
+
+[data-colors-mode="figjam-light"] {
+    --colors-border-default-default: var(--colors-grey-200);
+}
+
+[data-colors-mode="figjam-dark"] {
+    --colors-border-default-default: var(--colors-grey-600);
+}
+
+[data-colors-mode="handoff-light"] {
+    --colors-border-default-default: var(--colors-grey-200);
+}
+
+[data-colors-mode="handoff-dark"] {
+    --colors-border-default-default: var(--colors-grey-600);
+}
+
+[data-colors-mode="flides-light"] {
+    --colors-border-default-default: var(--colors-grey-200);
+}
+
+[data-colors-mode="flides-dark"] {
+    --colors-border-default-default: var(--colors-grey-600);
+}
+
+[data-colors-mode="sites-light"] {
+    --colors-border-default-default: var(--colors-grey-200);
+}
+
+[data-colors-mode="sites-dark"] {
+    --colors-border-default-default: var(--colors-grey-600);
+}
