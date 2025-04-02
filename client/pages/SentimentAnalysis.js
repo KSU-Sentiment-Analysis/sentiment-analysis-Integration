@@ -13,36 +13,49 @@ const SentimentAnalysis = () => {
     };
 
     const handleFileSubmit = async () => {
-        if (!csvFile) {
-            alert("Please upload a CSV file first.");
-            return;
-        }
+    if (!csvFile) {
+        alert("Please upload a CSV file first.");
+        return;
+    }
 
-        const formData = new FormData();
-        formData.append("file", csvFile);
+    const formData = new FormData();
+    formData.append("file", csvFile);
 
         try {
-            const response = await axios.post("http://localhost:5000/upload", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-                responseType: "blob" // Expecting a file response
+            const uploadResponse = await axios.post("http://localhost:5000/upload", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
             });
 
-            const fileURL = URL.createObjectURL(response.data);
+            const filePath = uploadResponse.data.file_path;
+            console.log("Uploaded file path:", filePath);
+
+            const processPayload = {
+                file_path: filePath,
+                process_type: "advanced_pretrained" // or "deep_custom", "train", "custom"
+            };
+
+            const processResponse = await axios.post("http://localhost:5000/process", processPayload, {
+                responseType: "blob"
+            });
+
+            // Create a URL for the processed file blob
+            const fileURL = URL.createObjectURL(processResponse.data);
             setProcessedFile(fileURL);
 
-            // Parse and display processed CSV file
-            Papa.parse(response.data, {
+
+            Papa.parse(processResponse.data, {
                 complete: (result) => {
-                    setData(result.data.slice(0, 5)); // Show 5 random rows
+                    setData(result.data.slice(0, 5)); // Shows 5 rows
                 },
                 header: true,
                 skipEmptyLines: true
             });
         } catch (error) {
-            console.error("Error uploading file:", error);
+            console.error("Error processing file:", error);
             alert("Failed to process the file.");
         }
     };
+
 
     return (
         <Container maxWidth="lg">
