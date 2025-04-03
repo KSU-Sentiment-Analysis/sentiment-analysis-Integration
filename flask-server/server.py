@@ -141,5 +141,27 @@ def get_metrics():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/api/generate-responses", methods=["GET"])
+def generate_responses():
+    dataset_name = request.args.get("dataset")
+    if not dataset_name:
+        return jsonify({"error": "Dataset name is required"}), 400
+
+    dataset_path = os.path.join(PROCESSED_FOLDER, dataset_name)
+    if not os.path.exists(dataset_path):
+        return jsonify({"error": f"Dataset '{dataset_name}' not found"}), 404
+
+    try:
+        df = pd.read_csv(dataset_path)
+        responses, scores, prompts = generate_structured_responses(df, sample_size=5)
+
+        return jsonify({
+            "responses": responses,
+            "evaluation_scores": scores,
+            "prompts_used": prompts
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
