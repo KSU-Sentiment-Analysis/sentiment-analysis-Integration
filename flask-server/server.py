@@ -1,12 +1,13 @@
 from flask import Flask, request, jsonify, send_file
 import pandas as pd
 import os
+import json
 from flask_cors import CORS
 
 # Import functions from your project
 from dataset_handler import process_data
 from custom_models import load_custom_model, train_and_save_model_from_data
-from deep_pipeline import run_full_deep_analysis
+from deep_pipeline import run_full_deep_analysis, predict_single_review
 
 app = Flask(__name__)
 CORS(app)
@@ -46,6 +47,7 @@ def upload_file():
 # 1."custom"               -> Use Existing Custom Model
 # 2."deep_custom"          -> Full Deep Custom Pipeline (with retraining)
 # 2."advanced_pretrained"  -> Run Pretrained Advanced Models (inference only)
+# 3. "Single review inference" -> as name suggests....
 @app.route("/process", methods=["POST"])
 def process_file():
     data = request.get_json()
@@ -112,6 +114,32 @@ def process_file():
     output_path = os.path.join(PROCESSED_FOLDER, out_name)
     processed_df.to_csv(output_path, index=False)
     return send_file(output_path, mimetype="text/csv", as_attachment=True, download_name=out_name)
+
+# single review endpoint
+@app.route("/predict", methods=["POST"])
+def predict_single():
+    data = request.get_json()
+    if not data or "review_text" not in data or "rating" not in data:
+        return jsonify({"error": "Missing review_text or rating"}), 400
+
+    try:
+        result = predict_single_review(data["review_text"], int(data["rating"]))
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# endpoint to serve all metrics from one json
+@app.route("/metrics", methods=["GET"])
+def get_metrics():
+    metrics_file = os.path.join(PROCESSED_FOLDER, "pre_deep_pipeline_metrics.json")
+    if not os.path.exists(metrics_file):
+        return jsonify({"error": "Metrics file not found"}), 404
+    try:
+        with open(metrics_file, "r") as f:
+            metrics_data = json.load(f)
+        return jsonify(metrics_data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
