@@ -8,6 +8,7 @@ from flask_cors import CORS
 from dataset_handler import process_data
 from custom_models import load_custom_model, train_and_save_model_from_data
 from deep_pipeline import run_full_deep_analysis, predict_single_review
+from gpt_response_generator import generate_structured_responses
 
 app = Flask(__name__)
 CORS(app)
