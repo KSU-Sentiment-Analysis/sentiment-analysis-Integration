@@ -1,29 +1,49 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper, Typography, Box, Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Container, Paper, Typography, Box, Button, TextField, Rating, Grid } from '@mui/material';
 import axios from 'axios';
 import Papa from 'papaparse';
-import yourGraphIcon from '../assets/icons8-combo-chart-50-1.png'; // Adjust path & name if needed
-
-
-
+import BarChartIcon from '@mui/icons-material/BarChart';
+import DownloadIcon from '@mui/icons-material/Download';
 
 const SentimentAnalysis = () => {
     const [csvFile, setCsvFile] = useState(null);
     const [data, setData] = useState([]);
     const [processedFile, setProcessedFile] = useState(null);
+    const [reviewText, setReviewText] = useState('');
+    const [rating, setRating] = useState(3);
+    const [singlePrediction, setSinglePrediction] = useState(null);
+    const [metrics, setMetrics] = useState(null);
 
     const handleFileUpload = (event) => {
         setCsvFile(event.target.files[0]);
     };
 
-    const handleFileSubmit = async () => {
-    if (!csvFile) {
-        alert("Please upload a CSV file first.");
-        return;
-    }
+    const handleSinglePredict = async () => {
+        if (!reviewText.trim()) {
+            alert("Please enter a review text");
+            return;
+        }
 
-    const formData = new FormData();
-    formData.append("file", csvFile);
+        try {
+            const response = await axios.post("http://localhost:5000/predict_single", {
+                review_text: reviewText,
+                rating: rating
+            });
+            setSinglePrediction(response.data);
+        } catch (error) {
+            console.error("Error predicting sentiment:", error);
+            alert("Failed to predict sentiment.");
+        }
+    };
+
+    const handleFileSubmit = async () => {
+        if (!csvFile) {
+            alert("Please upload a CSV file first.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", csvFile);
 
         try {
             const uploadResponse = await axios.post("http://localhost:5000/upload", formData, {
@@ -35,7 +55,7 @@ const SentimentAnalysis = () => {
 
             const processPayload = {
                 file_path: filePath,
-                process_type: "advanced_pretrained" // or "deep_custom", "train", "custom" # hard codded rn need to change it
+                process_type: "advanced_pretrained"
             };
 
             const processResponse = await axios.post("http://localhost:5000/process", processPayload, {
@@ -45,9 +65,15 @@ const SentimentAnalysis = () => {
             const fileURL = URL.createObjectURL(processResponse.data);
             setProcessedFile(fileURL);
 
+            // Get metrics for the processed file
+            const metricsResponse = await axios.get("http://localhost:5000/get_metrics", {
+                params: { file_path: filePath }
+            });
+            setMetrics(metricsResponse.data);
+
             Papa.parse(processResponse.data, {
                 complete: (result) => {
-                    setData(result.data.slice(0, 5)); // Shows 5 rows
+                    setData(result.data.slice(0, 5));
                 },
                 header: true,
                 skipEmptyLines: true
@@ -60,139 +86,149 @@ const SentimentAnalysis = () => {
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
-          <Box sx={{ textAlign: "center", mb: 4 }}>
-            <Typography variant="h4" fontWeight="bold" sx={{ color: "#000" }}>
-              Upload a file for Sentiment Analysis
-            </Typography>
-          </Box>
-      
-          {/* Upload Section */}
-            <Paper
-            elevation={3}
-            sx={{
-                width: "100%",
-                maxWidth: "1000px",
-                mx: "auto",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                px: 5,
-                py: 3,
-                borderRadius: 3,
-                mb: 5
-            }}
-            >
-            <Button
-                variant="contained"
-                component="label"
-                sx={{
-                backgroundColor: "#e0e7ff",
-                color: "#1e40af",
-                textTransform: "none",
-                fontWeight: "bold",
-                px: 6,
-                borderRadius: "9999px"
-                }}
-            >
-                Choose File
-                <input hidden type="file" accept=".csv" onChange={handleFileUpload} />
-            </Button>
-
-            <Typography variant="body1" color="text.secondary">
-                {csvFile ? csvFile.name : "No File Chosen"}
-            </Typography>
-
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleFileSubmit}
-                startIcon={<span style={{ fontSize: "1.2rem" }}>☁️</span>}
-                sx={{
-                borderRadius: "9999px",
-                px: 4,
-                textTransform: "none",
-                fontWeight: "bold"
-                }}
-            >
-                Upload & Process
-            </Button>
-            </Paper>
-
-            {/* Processed Data Box */}
-            <Paper
-            elevation={3}
-            sx={{
-                width: "100%",
-                maxWidth: "1000px", // same as above
-                mx: "auto",
-                px: 5,
-                py: 4,
-                borderRadius: 3,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center", // centered for content
-                justifyContent: "flex-start",
-                textAlign: "center",
-                minHeight: 200,
-                mb: 5
-            }}
-            >
-            <Typography
-                variant="h6"
-                fontWeight="bold"
-                color="primary"
-                sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                mt: 0
-                }}
-            >
-                <img
-                src={yourGraphIcon}
-                alt="Graph icon"
-                style={{ width: 20, height: 20 }}
-                />
-                Processed Data (No data showing)
-            </Typography>
-
-            <Typography variant="body2" sx={{ color: "gray", mt: 0 }}>
-                Visual comparisons of datasets go here.
-            </Typography>
-            </Paper>
-
-      
-          {/* Download Button */}
-          {processedFile && (
-            <Box sx={{ textAlign: "center", mt: 2 }}>
-              <Button variant="contained" color="secondary" href={processedFile} download="processed_results.csv">
-                Download Processed File
-              </Button>
+            {/* File Upload Section */}
+            <Box sx={{ mb: 4 }}>
+                <Paper elevation={3} sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Button
+                        variant="contained"
+                        component="label"
+                        sx={{
+                            backgroundColor: "#e0e7ff",
+                            color: "#1e40af",
+                            textTransform: "none",
+                            fontWeight: "bold",
+                            borderRadius: "9999px"
+                        }}
+                    >
+                        Choose/Upload File
+                        <input hidden type="file" accept=".csv" onChange={handleFileUpload} />
+                    </Button>
+                    <Typography variant="body1" sx={{ flex: 1 }}>
+                        {csvFile ? csvFile.name : "File name"}
+                    </Typography>
+                    <select
+                        style={{
+                            padding: '8px',
+                            borderRadius: '4px',
+                            border: '1px solid #ccc'
+                        }}
+                    >
+                        <option value="train">Train Custom Model</option>
+                        <option value="custom">Use Existing Custom Model</option>
+                        <option value="deep_custom">Full Deep Custom Pipeline</option>
+                        <option value="advanced_pretrained">Run Pretrained Models</option>
+                    </select>
+                    <Button
+                        variant="contained"
+                        onClick={handleFileSubmit}
+                        sx={{
+                            borderRadius: "9999px",
+                            textTransform: "none",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        Process
+                    </Button>
+                </Paper>
             </Box>
-          )}
-      
-          {/* Optional Power BI Embed (keep if needed) */}
-          {/* <Grid container spacing={3} sx={{ mt: 4 }}>
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, textAlign: "center" }}>
-                <Typography variant="h6">Sentiment Analysis Report</Typography>
-                <iframe
-                  title="Power BI Report"
-                  width="100%"
-                  height="600"
-                  src="..."
-                  frameBorder="0"
-                  allowFullScreen
-                ></iframe>
-              </Paper>
+
+            {/* Main Content Grid */}
+            <Grid container spacing={3}>
+                {/* Left Column - Metrics */}
+                <Grid item xs={12} md={6}>
+                    <Paper elevation={3} sx={{ p: 3, height: '100%' }}>                        
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                            <BarChartIcon sx={{ width: 24, height: 24 }} />
+                            <Typography variant="h6">
+                                Metrics Dashboard
+                            </Typography>
+                        </Box>
+                        {metrics ? (
+                            <Box sx={{ mt: 2 }}>
+                                <Typography>Average Rating: {metrics.average_rating?.toFixed(2)}</Typography>
+                                {processedFile && (
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<DownloadIcon />}
+                                        onClick={() => window.open(processedFile)}
+                                        sx={{ mt: 1, mb: 2 }}
+                                    >
+                                        Download Processed File
+                                    </Button>
+                                )}
+                                {metrics.sentiment_distribution && (
+                                    <Box sx={{ mt: 2 }}>
+                                        <Typography variant="subtitle2">Sentiment Distribution:</Typography>
+                                        {Object.entries(metrics.sentiment_distribution).map(([sentiment, count]) => (
+                                            <Typography key={sentiment}>{sentiment}: {count}</Typography>
+                                        ))}
+                                    </Box>
+                                )}
+                                {data.length > 0 && (
+                                    <Box sx={{ mt: 3 }}>
+                                        <Typography variant="subtitle2" gutterBottom>Recent Processed Data:</Typography>
+                                        {data.map((item, index) => (
+                                            <Box key={index} sx={{ mt: 1, p: 1, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                                                <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
+                                                    {item.text || item.review_text}
+                                                </Typography>
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                )}
+                            </Box>
+                        ) : (
+                            <Typography color="text.secondary">No metrics available</Typography>
+                        )}
+                    </Paper>
+                </Grid>
+
+                {/* Right Column - Single Review */}
+                <Grid item xs={12} md={6}>
+                    <Paper elevation={3} sx={{ p: 3, height: '100%' }}>                        
+                        <Typography variant="h6" gutterBottom>
+                            Single Review Predict
+                        </Typography>
+                        <TextField
+                            fullWidth
+                            multiline
+                            rows={4}
+                            variant="outlined"
+                            label="Input text"
+                            value={reviewText}
+                            onChange={(e) => setReviewText(e.target.value)}
+                            sx={{ mb: 2 }}
+                        />
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                            <Typography>Ratings 1-5:</Typography>
+                            <Rating
+                                value={rating}
+                                onChange={(event, newValue) => setRating(newValue)}
+                            />
+                        </Box>
+                        <Button
+                            variant="contained"
+                            onClick={handleSinglePredict}
+                            sx={{ mb: 2 }}
+                        >
+                            Analyze
+                        </Button>
+                        <Box sx={{ mt: 2 }}>
+                            <Typography variant="subtitle2" gutterBottom>Output</Typography>
+                            {singlePrediction ? (
+                                <Box sx={{ p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                                    <Typography>Sentiment: {singlePrediction.sentiment}</Typography>
+                                    <Typography>Confidence: {(singlePrediction.confidence * 100).toFixed(2)}%</Typography>
+                                </Box>
+                            ) : (
+                                <Typography color="text.secondary">Prediction will appear here</Typography>
+                            )}
+                        </Box>
+                    </Paper>
+                </Grid>
             </Grid>
-          </Grid> */}
-      
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", textAlign: "center", mt: 6 }}>
-            © 2025 Heartspeak AI. All rights reserved.
-          </Typography>
         </Container>
-      );      
+    );
 };
 
 export default SentimentAnalysis;
