@@ -217,8 +217,23 @@ const SentimentAnalysis = () => {
                             <Typography variant="subtitle2" gutterBottom>Output</Typography>
                             {singlePrediction ? (
                                 <Box sx={{ p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
-                                    <Typography>Sentiment: {singlePrediction.sentiment}</Typography>
-                                    <Typography>Confidence: {(singlePrediction.confidence * 100).toFixed(2)}%</Typography>
+                                    <Typography variant="subtitle2">
+                                        Sentiment: {singlePrediction.predicted_sentiment}
+                                    </Typography>
+                                    <Typography variant="subtitle2">
+                                        Emotions: {Array.isArray(singlePrediction.predicted_emotions) ? singlePrediction.predicted_emotions.join(', ') : 'N/A'}
+                                    </Typography>
+                                    <Typography variant="subtitle2">
+                                        Sarcasm: {singlePrediction.sarcasm_flag ? "Yes" : "No"}
+                                    </Typography>
+                                    <Typography variant="subtitle2">Aspect Analysis:</Typography>
+                                        {singlePrediction.aspect_analysis && singlePrediction.aspect_analysis.length > 0 ? (
+                                            singlePrediction.aspect_analysis.map((aspect, index) => (
+                                            <Typography key={index}>{aspect.aspect}: {aspect.sentiment}</Typography>
+                                            ))
+                                        ) : (
+                                            <Typography>N/A</Typography>
+                                        )}
                                 </Box>
                             ) : (
                                 <Typography color="text.secondary">Prediction will appear here</Typography>

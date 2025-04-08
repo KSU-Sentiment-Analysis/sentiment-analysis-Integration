@@ -125,10 +125,7 @@ def predict_single():
 
     try:
         result = predict_single_review(data["review_text"], int(data["rating"]))
-        return jsonify({
-            "sentiment": result["sentiment"],
-            "confidence": result["confidence"]
-        })
+        return jsonify(result)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
