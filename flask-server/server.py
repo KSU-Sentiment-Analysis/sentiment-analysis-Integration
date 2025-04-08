@@ -132,11 +132,11 @@ def predict_single():
 
 @app.route("/api/generate-responses", methods=["GET"])
 def generate_responses():
-    dataset_name = request.args.get("dataset")
+    dataset_name = request.args.get("pre_deep_pipeline_output.csv")
     if not dataset_name:
         return jsonify({"error": "Dataset name is required"}), 400
 
-    dataset_path = os.path.join(PROCESSED_FOLDER, dataset_name)
+    dataset_path = os.path.join(OUTPUTS, dataset_name)
     if not os.path.exists(dataset_path):
         return jsonify({"error": f"Dataset '{dataset_name}' not found"}), 404
 
