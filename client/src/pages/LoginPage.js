@@ -32,18 +32,25 @@ const LoginPage = () => {
     // Add buttonStyle definition
     const buttonStyle = {
         width: "100%",
-        padding: "10px",
+        padding: "12px",
         backgroundColor: "#1976D2",
         color: "white",
         border: "none",
-        borderRadius: "5px",
+        borderRadius: "8px",
         cursor: "pointer",
-        marginTop: "10px",
-        transform: isButtonPressed ? 'scale(0.95) translateY(2px)' : 'scale(1) translateY(0)',
-        transition: 'all 0.2s ease',
+        marginTop: "20px",
+        fontSize: "16px",
+        fontWeight: "600",
+        letterSpacing: "0.5px",
+        transform: isButtonPressed ? 'scale(0.98) translateY(1px)' : 'scale(1) translateY(0)',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         boxShadow: isButtonPressed 
-            ? 'inset 0 3px 5px rgba(0,0,0,0.2), 0 2px 4px rgba(25, 118, 210, 0.1)' 
-            : '0 6px 12px rgba(25, 118, 210, 0.3), 0 4px 6px rgba(0,0,0,0.1)',
+            ? 'inset 0 2px 4px rgba(0,0,0,0.1)' 
+            : '0 4px 6px rgba(25, 118, 210, 0.2)',
+        '&:hover': {
+            backgroundColor: "#1565C0",
+            transform: 'translateY(-1px)'
+        }
     };
 
     // Update the shakeAnimation object
@@ -59,10 +66,15 @@ const LoginPage = () => {
             "style",
             null,
             `
+            @keyframes gradientAnimation {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
             @keyframes shakeEffect {
                 0%, 100% { transform: translateX(0); }
-                10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-                20%, 40%, 60%, 80% { transform: translateX(10px); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
             }
             `
         ),
@@ -75,7 +87,9 @@ const LoginPage = () => {
                     alignItems: "center",
                     justifyContent: "center",
                     flexDirection: "column",
-                    background: "linear-gradient(90deg, #1976D2, #0D47A1)"
+                    background: "linear-gradient(135deg, #1976D2 0%, #0D47A1 100%)",
+                    backgroundSize: "400% 400%",
+                    animation: "gradientAnimation 15s ease infinite"
                 }
             },
             React.createElement("h2", { style: { color: "white" } }, "HeartSpeak AI - Login"),
@@ -84,17 +98,33 @@ const LoginPage = () => {
                 { 
                     style: {
                         background: "white",
-                        padding: "20px",
-                        borderRadius: "12px",
-                        boxShadow: "0px 4px 10px rgba(0,0,0,0.3)",
-                        textAlign: "center",
-                        width: "350px"
+                        padding: "28px",
+                        borderRadius: "16px",
+                        boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                        width: "400px",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "16px"
                     } 
                 },
-                React.createElement("h3", { style: { color: "#1976D2" } }, "Login"),
+                React.createElement("h3", { 
+                    style: { 
+                        color: "#1976D2",
+                        fontSize: "28px",
+                        margin: "0",
+                        textAlign: "left"
+                    } 
+                }, "Login"),
                 React.createElement(
                     "form",
-                    { onSubmit: handleSubmit },
+                    { 
+                        onSubmit: handleSubmit,
+                        style: {
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "8px"
+                        }
+                    },
                     React.createElement("input", {
                         type: "email",
                         name: "email",
@@ -102,12 +132,19 @@ const LoginPage = () => {
                         required: true,
                         style: { 
                             ...shakeAnimation, 
-                            width: "calc(100% - 20px)", 
-                            padding: "10px", 
-                            margin: "10px 0", 
-                            borderRadius: "5px", 
-                            border: shake ? "1px solid #ff0000" : "1px solid #ccc",
-                            boxShadow: shake ? "0 0 5px rgba(255, 0, 0, 0.5)" : "none"
+                            width: "calc(100% - 24px)", 
+                            padding: "12px", 
+                            margin: "3px 0", 
+                            borderRadius: "8px", 
+                            border: shake ? "1px solid #ff0000" : "1px solid #e0e0e0",
+                            boxShadow: shake ? "0 0 5px rgba(255, 0, 0, 0.5)" : "0 2px 4px rgba(0,0,0,0.05)",
+                            fontSize: "15px",
+                            transition: "all 0.3s ease",
+                            '&:focus': {
+                                outline: "none",
+                                borderColor: "#1976D2",
+                                boxShadow: "0 0 0 2px rgba(25,118,210,0.2)"
+                            }
                         },
                         onChange: handleChange
                     }),
@@ -128,7 +165,7 @@ const LoginPage = () => {
                                 ...shakeAnimation, 
                                 width: "calc(100% - 20px)", 
                                 padding: "10px", 
-                                margin: "10px 0", 
+                                margin: "3px 0", 
                                 borderRadius: "5px", 
                                 border: shake ? "1px solid #ff0000" : "1px solid #ccc",
                                 boxShadow: shake ? "0 0 5px rgba(255, 0, 0, 0.5)" : "none"

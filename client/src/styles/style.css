@@ -195,4 +195,336 @@
       text-align: center;
     }
   }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 4rem;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.header.dark {
+    background: #1a1a1a;
+    color: #ffffff;
+}
+
+.header-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.heartspeak-icon {
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.heartspeak-icon:hover {
+    transform: scale(1.1);
+}
+
+.bar {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin-left: auto;
+}
+
+.nav-item, .login-btn, .signup-btn {
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover, .login-btn:hover, .signup-btn:hover {
+    background: rgba(0,0,0,0.05);
+    transform: translateY(-2px);
+}
+
+.header.dark .nav-item:hover, 
+.header.dark .login-btn:hover,
+.header.dark .signup-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.login-btn {
+    border: 1px solid #007bff;
+    color: #007bff;
+}
+
+.signup-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: 2rem;
+}
+
+.light-dark-mode {
+    cursor: pointer;
+    padding: 0.75rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    margin-right: 2rem;
+    background: rgba(0,0,0,0.03);
+}
+
+.light-dark-mode:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+.day-and-night {
+    width: 24px;
+    height: 24px;
+}
+
+
+/* Add these at the top of your CSS file */
+:root {
+    --bg-light: #ffffff;
+    --text-light: #000000;
+    --bg-dark: #1a1a1a;
+    --text-dark: #ffffff;
+}
+
+/* Dark mode styles */
+.dark-mode {
+    background-color: var(--bg-dark) !important;
+    color: var(--text-dark) !important;
+}
+
+.dark-mode .header {
+    background-color: #2d2d2d !important;
+    color: var(--text-dark) !important;
+}
+
+.dark-mode .nav-item {
+    color: var(--text-dark) !important;
+}
+
+.dark-mode .login-btn {
+    color: #4dabff !important;
+    border-color: #4dabff !important;
+}
+
+.dark-mode .signup-btn {
+    background-color: #4dabff !important;
+    color: var(--text-dark) !important;
+}
+
+.dark-mode .light-dark-mode:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+.team-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.team-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.team-description {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+}
+
+.team-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 123, 255, 0.5) rgba(0, 0, 0, 0.1);
+}
+
+.team-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.team-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.team-grid::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 123, 255, 0.5);
+    border-radius: 4px;
+}
+
+.team-member-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.0rem;
+    flex: 0 0 220px;
+    min-width: 220px;
+    min-height: 350px;
+    cursor: pointer;
+}
+
+.team-member-card:hover {
+    transform: translateY(-5px) rotate(1deg);
+    box-shadow: 0 12px 24px rgba(0, 123, 255, 0.3);
+    border-color: #007bff;
+}
+
+.team-member-card:hover .team-member-image {
+    transform: scale(1.08) rotate(2deg);
+    border-color: #007bff;
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+    filter: brightness(1.1) contrast(1.1);
+}
+
+.team-member-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: -8.0rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 3px solid transparent;
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+}
+
+.team-member-image:hover {
+    transform: scale(1.08) rotate(2deg);
+    border-color: #007bff;
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+    filter: brightness(1.1) contrast(1.1);
+}
+
+.team-member-name {
+    font-size: 1.1rem;  /* Slightly smaller font */
+    margin: 0;
+    padding: 0;
+}
+
+.team-member-role {
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 0;
+    text-shadow: 1px 1px 2px rgba(128, 128, 128, 0.5);
+}
+
+.team-member-description {
+    font-size: 0.85rem;  /* Slightly smaller font */
+    line-height: 1.4;
+    margin: 0.25rem 0;
+    padding: 0 0.5rem;
+}
+
+.read-bio-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.read-bio-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark mode styles for team page */
+.dark-mode .team-container {
+    background-color: var(--bg-dark);
+}
+
+.dark-mode .team-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .team-description {
+    color: #bbb;
+}
+
+.dark-mode .team-member-card {
+    background-color: #2d2d2d;
+}
+
+.dark-mode .team-member-name {
+    color: var(--text-dark);
+}
+
+.dark-mode .team-member-role {
+    color: #4dabff;
+}
+
+.dark-mode .team-member-description {
+    color: #bbb;
+}
+
+body.dark-mode .header {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+body.dark-mode .nav-item {
+    color: var(--text-dark);
+}
+
+body.dark-mode .login-btn {
+    border-color: #4dabff;
+    color: #4dabff;
+}
+
+body.dark-mode .signup-btn {
+    background: #4dabff;
+}
   

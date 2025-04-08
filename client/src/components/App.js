@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container } from '@mui/material';
-import Header from './components/Header';
+import { Header } from '../Header';
 import FeedbackInput from './components/FeedbackInput';
 import SentimentResult from './components/SentimentResult';
 import ResponseHistory from './components/ResponseHistory';

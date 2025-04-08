@@ -4,9 +4,10 @@ import { Homepage as Home } from './pages/Home';
 import SentimentAnalysis from './pages/SentimentAnalysis';
 import ResponseGeneration from './pages/ResponseGeneration';
 import LoginPage from "./pages/LoginPage";
-import { AppBar, Toolbar, Tabs, Tab, Box } from '@mui/material';
-import logo from './assets/heartspeak-icon.png'; // Adjust path based on your project structure
-import themeToggleIcon from './assets/icons8-day-and-night-50-1.png'; // Adjust path & name if needed
+import Team from './pages/Team';
+import { Box, Toolbar } from '@mui/material';
+import logo from './assets/heartspeak-icon.png';
+import themeToggleIcon from './assets/icons8-day-and-night-50-1.png';
 
 const NavBar = () => {
     const location = useLocation();
@@ -38,19 +39,50 @@ const NavBar = () => {
                     px: 3,
                     py: 1,
                     display: 'flex',
-                    gap: 3,
+                    gap: 4,
                     alignItems: 'center',
-                    fontWeight: 500
+                    fontWeight: 700
                 }}>
-                    <Link to="/" style={{ textDecoration: 'none', color: location.pathname === '/' ? '#0D47A1' : '#000' }}>
-                        Home
-                    </Link>
-                    <Link to="/sentiment" style={{ textDecoration: 'none', color: location.pathname === '/sentiment' ? '#0D47A1' : '#000' }}>
-                        Sentiment Analysis
-                    </Link>
-                    <Link to="/response" style={{ textDecoration: 'none', color: location.pathname === '/response' ? '#0D47A1' : '#000' }}>
-                        Response Generation
-                    </Link>
+                    {[
+                        { path: '/', label: 'Home' },
+                        { path: '/sentiment', label: 'Sentiment Analysis' },
+                        { path: '/response', label: 'Response Generation' },
+                        { path: '/team', label: 'Meet The Team' }
+                    ].map((item) => (
+                        <Link 
+                            key={item.path}
+                            to={item.path} 
+                            style={{ 
+                                textDecoration: 'none',
+                                color: location.pathname === item.path ? '#0D47A1' : '#000',
+                                position: 'relative',
+                                padding: '8px 0',
+                                transition: 'color 0.3s ease',
+                                fontWeight: 700
+                            }}
+                            sx={{
+                                '&:hover': {
+                                    color: '#1976D2'
+                                },
+                                '&::after': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    width: location.pathname === item.path ? '100%' : '0%',
+                                    height: '2px',
+                                    bottom: 0,
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    backgroundColor: '#0D47A1',
+                                    transition: 'width 0.3s ease'
+                                },
+                                '&:hover::after': {
+                                    width: '100%'
+                                }
+                            }}
+                        >
+                            {item.label}
+                        </Link>
+                    ))}
                 </Box>
 
                 {/* Right - Icons and Buttons */}
@@ -122,6 +154,7 @@ const App = () => {
                 <Route path="/sentiment" element={<SentimentAnalysis />} />
                 <Route path="/response" element={<ResponseGeneration />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/team" element={<Team />} />
             </Routes>
         </Router>
     );

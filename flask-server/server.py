@@ -117,7 +117,7 @@ def process_file():
     return send_file(output_path, mimetype="text/csv", as_attachment=True, download_name=out_name)
 
 # single review endpoint
-@app.route("/predict", methods=["POST"])
+@app.route("/predict_single", methods=["POST"])
 def predict_single():
     data = request.get_json()
     if not data or "review_text" not in data or "rating" not in data:
@@ -129,18 +129,6 @@ def predict_single():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# endpoint to serve all metrics from one json
-@app.route("/metrics", methods=["GET"])
-def get_metrics():
-    metrics_file = os.path.join(PROCESSED_FOLDER, "pre_deep_pipeline_metrics.json")
-    if not os.path.exists(metrics_file):
-        return jsonify({"error": "Metrics file not found"}), 404
-    try:
-        with open(metrics_file, "r") as f:
-            metrics_data = json.load(f)
-        return jsonify(metrics_data)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 @app.route("/api/generate-responses", methods=["GET"])
 def generate_responses():
