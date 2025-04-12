@@ -130,7 +130,7 @@ def predict_single():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/api/generate-responses", methods=["GET"])
+@app.route("/generate-responses", methods=["GET"])
 def generate_responses():
     dataset_name = request.args.get("pre_deep_pipeline_output.csv")
     if not dataset_name:
