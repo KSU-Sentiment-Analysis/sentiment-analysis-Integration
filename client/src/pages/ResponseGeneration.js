@@ -48,7 +48,7 @@ const ResponseGeneration = () => {
     }
 
     // Using query parameter 'dataset' matching the backend endpoint
-    const endpoint = `http://localhost:5000/api/generate-responses?dataset=pre_deep_pipeline_output.csv`;
+    const endpoint = `http://localhost:5000/generate-responses?dataset=pre_deep_pipeline_output.csv`;
 
     fetch(endpoint)
       .then((response) => response.json())
