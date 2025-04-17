@@ -10,22 +10,22 @@ import '../assets/role-icons.svg';
 
 const teamMembers = [
     {
-        name: 'Ethan Barnes',
-        role: 'Lead Developer',
-        description: "A deeply passionate computer science professional with a strong focus on machine learning and natural language processing, driven by a desire to build intelligent systems that make a real-world impact",
-        image: EthanBarnes,
+        name: 'Aravind lyer',
+        role: 'Lead Backend AI Developer/Tester',
+        description: 'A passionate Computer Science major and expert in sentiment analysis and emotion detection algorithms, driven by the goal of bridging human emotion and technology through intelligent systems.',
+        image: AranindIyer,
     },
     {
         name: 'Nabeel Faridi',
-        role: 'Developer/Tester',
-        description: 'Driven computer science major who played a key role as a Developer and Tester on the project, combining a strong enthusiasm for building reliable software with a keen eye for quality and detail..',
-        image: NabeelFaridi,     
+        role: 'Front-End Developer/Tester',
+        description: 'Driven computer science major who played a key role as a Developer and Tester on the project, combining a strong enthusiasm for building reliable software with a keen eye for quality and detail.',
+        image: NabeelFaridi,
     },
     {
-        name: 'Shammah Charles',
-        role: 'UI/UX Designer',
-        description: 'Fueled by a passion for design and user-centered thinking, dedicated to crafting seamless, visually stunning experiences that not only delight users but elevate the entire interaction.',
-        image: ShammahCharles,
+        name: 'Ethan Barnes',
+        role: 'OpenAI & Cloud Developer',
+        description: "A deeply passionate computer science professional with a strong focus on machine learning and natural language processing, driven by a desire to build intelligent systems that make a real-world impact",
+        image: EthanBarnes,
     },
     {
         name: 'Isha Minocha',
@@ -34,11 +34,11 @@ const teamMembers = [
         image: IshaMinocha,
     },
     {
-        name: 'Aravind lyer',
-        role: 'Developer/Tester',
-        description: 'A passionate Computer Science major and expert in sentiment analysis and emotion detection algorithms, driven by the goal of bridging human emotion and technology through intelligent systems.',
-        image: AranindIyer,
-    }
+        name: 'Shammah Charles',
+        role: 'UI/UX Designer',
+        description: 'Fueled by a passion for design and user-centered thinking, dedicated to crafting seamless, visually stunning experiences that not only delight users but elevate the entire interaction.',
+        image: ShammahCharles,
+    },
 ];
 
 const Team = () => {
