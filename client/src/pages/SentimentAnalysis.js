@@ -1,13 +1,33 @@
-import React, { useState } from 'react';
-import { Container, Paper, Typography, Box, Button, TextField, Rating, Grid } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import {
+    Container, Paper, Typography, Box, Button, TextField, Rating, Grid
+} from '@mui/material';
 import axios from 'axios';
 import Papa from 'papaparse';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DownloadIcon from '@mui/icons-material/Download';
+import {
+    ResponsiveContainer, PieChart, Pie, Cell, Tooltip, 
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend
+} from 'recharts';
+
+
+  
+const STOP_WORDS = new Set([
+    'this', 'that', 'they', 'you', 'it', 'them', 'i', 'we', 'he', 'she', 'my', 'your', 'our', 'their',
+    'me', 'us', 'him', 'her', 'who', 'what', 'which', 'where', 'how', 'why'
+  ]);
+  
+const COLORS = ['#4CAF50', '#8BC34A', '#FFEB3B', '#FF9800', '#F44336'];
+const TARGET_SENTIMENTS = ['very positive', 'positive', 'neutral', 'negative', 'very negative'];
 
 const SentimentAnalysis = () => {
     const [csvFile, setCsvFile] = useState(null);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({
+        sentiment: [],
+        emotion: [],
+        aspect: [],
+      });
     const [processedFile, setProcessedFile] = useState(null);
     const [reviewText, setReviewText] = useState('');
     const [rating, setRating] = useState(3);
@@ -65,7 +85,6 @@ const SentimentAnalysis = () => {
             const fileURL = URL.createObjectURL(processResponse.data);
             setProcessedFile(fileURL);
 
-            // Get metrics for the processed file
             const metricsResponse = await axios.get("http://localhost:5000/get_metrics", {
                 params: { file_path: filePath }
             });
@@ -84,9 +103,111 @@ const SentimentAnalysis = () => {
         }
     };
 
+        // Hardcoded Chart Data from pre_advanced_sentiment_output.csv
+        useEffect(() => {
+            // FETCH SENTIMENTS
+            fetch('/data/pre_advanced_sentiment_output.csv')
+                .then(res => res.text())
+                .then(csvText => {
+                    Papa.parse(csvText, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: (result) => {
+                            const sentimentCount = {};
+                            result.data.forEach(row => {
+                                const rawSentiment = row.predicted_sentiment || row.sentiment || row.Sentiment || row.label;
+                                const sentiment = rawSentiment?.trim()?.toLowerCase();
+                                if (sentiment) {
+                                    sentimentCount[sentiment] = (sentimentCount[sentiment] || 0) + 1;
+                                }
+                            });
+                            const sentimentData = TARGET_SENTIMENTS.map(label => ({
+                                name: label,
+                                value: sentimentCount[label] || 0
+                            }));
+                            setData(prev => ({ ...prev, sentiment: sentimentData }));
+                        }
+                    });
+                });
+        
+            // FETCH EMOTIONS
+            fetch('/data/pre_deep_emotion_output.csv')
+                .then(res => res.text())
+                .then(csvText => {
+                    Papa.parse(csvText, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: (result) => {
+                            const emotionCount = {};
+                            result.data.forEach(row => {
+                                const rawEmotions = row.predicted_emotions || '';
+                                const emotions = rawEmotions.replace(/[\[\]']/g, '').split(',').map(e => e.trim()).filter(Boolean);
+                                emotions.forEach(emotion => {
+                                    emotionCount[emotion] = (emotionCount[emotion] || 0) + 1;
+                                });
+                            });
+                            const emotionData = Object.entries(emotionCount).map(([name, value]) => ({ name, value }));
+                            setData(prev => ({ ...prev, emotion: emotionData }));
+                        }
+                    });
+                });
+
+                // FETCH ASPECT SENTIMENT
+                fetch('/data/pre_aspect_sentiment_output.csv')
+                .then(res => res.text())
+                .then(csvText => {
+                Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: (result) => {
+                    const aspectSentimentMap = {};
+
+                    result.data.forEach(row => {
+                        try {
+                        const parsed = JSON.parse(row.aspect_analysis);
+                        parsed.forEach(({ aspect, sentiment }) => {
+                            const aspectKey = aspect.trim().toLowerCase();
+                            if (STOP_WORDS.has(aspectKey)) return; // skip non-informative aspects
+
+                            const sentimentKey = sentiment.trim().toLowerCase();
+
+                            if (!aspectSentimentMap[aspectKey]) {
+                            aspectSentimentMap[aspectKey] = {};
+                            }
+                            aspectSentimentMap[aspectKey][sentimentKey] =
+                            (aspectSentimentMap[aspectKey][sentimentKey] || 0) + 1;
+                        });
+                        } catch (e) {
+                        console.warn("Could not parse aspect_analysis:", row.aspect_analysis);
+                        }
+                    });
+
+                    // Transform map to chart-friendly array, sorted by total sentiment count
+                    const aspectData = Object.entries(aspectSentimentMap)
+                    .map(([aspect, sentiments]) => ({
+                    aspect,
+                    ...sentiments,
+                    total: Object.values(sentiments).reduce((sum, count) => sum + count, 0),
+                    }))
+                    .sort((a, b) => b.total - a.total)
+                    .slice(0, 10) // change to 5 for Top 5 if preferred
+                    .map(({ total, ...rest }) => rest); // remove 'total' before setting state
+
+                    setData(prev => ({ ...prev, aspect: aspectData }));
+
+
+                    setData(prev => ({ ...prev, aspect: aspectData }));
+                    }
+                });
+                });
+
+        }, []);
+        
+    
+
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
-            {/* File Upload Section */}
+            {/* Upload Section */}
             <Box sx={{ mb: 4 }}>
                 <Paper elevation={3} sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Button
@@ -132,60 +253,92 @@ const SentimentAnalysis = () => {
                 </Paper>
             </Box>
 
-            {/* Main Content Grid */}
+            {/* Main Grid */}
             <Grid container spacing={3}>
-                {/* Left Column - Metrics */}
+                {/* Metrics Panel */}
                 <Grid item xs={12} md={6}>
-                    <Paper elevation={3} sx={{ p: 3, height: '100%' }}>                        
+                    <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                             <BarChartIcon sx={{ width: 24, height: 24 }} />
                             <Typography variant="h6">
-                                Metrics Dashboard
+                                Sentiment Pie Chart
                             </Typography>
                         </Box>
-                        {metrics ? (
+                        {data.sentiment.length > 0 && (
                             <Box sx={{ mt: 2 }}>
-                                <Typography>Average Rating: {metrics.average_rating?.toFixed(2)}</Typography>
-                                {processedFile && (
-                                    <Button
-                                        variant="outlined"
-                                        startIcon={<DownloadIcon />}
-                                        onClick={() => window.open(processedFile)}
-                                        sx={{ mt: 1, mb: 2 }}
-                                    >
-                                        Download Processed File
-                                    </Button>
-                                )}
-                                {metrics.sentiment_distribution && (
-                                    <Box sx={{ mt: 2 }}>
-                                        <Typography variant="subtitle2">Sentiment Distribution:</Typography>
-                                        {Object.entries(metrics.sentiment_distribution).map(([sentiment, count]) => (
-                                            <Typography key={sentiment}>{sentiment}: {count}</Typography>
-                                        ))}
-                                    </Box>
-                                )}
-                                {data.length > 0 && (
-                                    <Box sx={{ mt: 3 }}>
-                                        <Typography variant="subtitle2" gutterBottom>Recent Processed Data:</Typography>
-                                        {data.map((item, index) => (
-                                            <Box key={index} sx={{ mt: 1, p: 1, bgcolor: '#f5f5f5', borderRadius: 1 }}>
-                                                <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
-                                                    {item.text || item.review_text}
-                                                </Typography>
-                                            </Box>
-                                        ))}
-                                    </Box>
-                                )}
+                                <Typography variant="subtitle2" gutterBottom>Sentiment Distribution:</Typography>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <PieChart>
+                                        <Pie
+                                            data={data.sentiment}
+                                            dataKey="value"
+                                            nameKey="name"
+                                            cx="50%"
+                                            cy="50%"
+                                            outerRadius={100}
+                                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                                        >
+                                            {data.sentiment.map((_, index) => (
+                                                <Cell key={`sentiment-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
                             </Box>
-                        ) : (
-                            <Typography color="text.secondary">No metrics available</Typography>
                         )}
+
+                        {data.emotion.length > 0 && (
+                            <Box sx={{ mt: 4 }}>
+                                <Typography variant="subtitle2" gutterBottom>Emotion Distribution:</Typography>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <PieChart>
+                                        <Pie
+                                            data={data.emotion}
+                                            dataKey="value"
+                                            nameKey="name"
+                                            cx="50%"
+                                            cy="50%"
+                                            outerRadius={100}
+                                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                                        >
+                                            {data.emotion.map((_, index) => (
+                                                <Cell key={`emotion-${index}`} fill={COLORS[(index + 2) % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </Box>
+                        )}
+
+                        {data.aspect.length > 0 && (
+                        <Box sx={{ mt: 4 }}>
+                            <Typography variant="subtitle2" gutterBottom>Aspect-Based Sentiment Distribution:</Typography>
+                            <ResponsiveContainer width="100%" height={400}>
+                            <BarChart data={data.aspect}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="aspect" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="very positive" stackId="a" fill="#4CAF50" />
+                                <Bar dataKey="positive" stackId="a" fill="#8BC34A" />
+                                <Bar dataKey="neutral" stackId="a" fill="#FFEB3B" />
+                                <Bar dataKey="negative" stackId="a" fill="#FF9800" />
+                                <Bar dataKey="very negative" stackId="a" fill="#F44336" />
+                            </BarChart>
+                            </ResponsiveContainer>
+                        </Box>
+                        )}
+
+
                     </Paper>
                 </Grid>
 
-                {/* Right Column - Single Review */}
+                {/* Single Review Panel */}
                 <Grid item xs={12} md={6}>
-                    <Paper elevation={3} sx={{ p: 3, height: '100%' }}>                        
+                    <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
                         <Typography variant="h6" gutterBottom>
                             Single Review Predict
                         </Typography>
@@ -221,19 +374,21 @@ const SentimentAnalysis = () => {
                                         Sentiment: {singlePrediction.predicted_sentiment}
                                     </Typography>
                                     <Typography variant="subtitle2">
-                                        Emotions: {Array.isArray(singlePrediction.predicted_emotions) ? singlePrediction.predicted_emotions.join(', ') : 'N/A'}
+                                        Emotions: {Array.isArray(singlePrediction.predicted_emotions)
+                                            ? singlePrediction.predicted_emotions.join(', ')
+                                            : 'N/A'}
                                     </Typography>
                                     <Typography variant="subtitle2">
                                         Sarcasm: {singlePrediction.sarcasm_flag ? "Yes" : "No"}
                                     </Typography>
                                     <Typography variant="subtitle2">Aspect Analysis:</Typography>
-                                        {singlePrediction.aspect_analysis && singlePrediction.aspect_analysis.length > 0 ? (
-                                            singlePrediction.aspect_analysis.map((aspect, index) => (
+                                    {singlePrediction.aspect_analysis?.length > 0 ? (
+                                        singlePrediction.aspect_analysis.map((aspect, index) => (
                                             <Typography key={index}>{aspect.aspect}: {aspect.sentiment}</Typography>
-                                            ))
-                                        ) : (
-                                            <Typography>N/A</Typography>
-                                        )}
+                                        ))
+                                    ) : (
+                                        <Typography>N/A</Typography>
+                                    )}
                                 </Box>
                             ) : (
                                 <Typography color="text.secondary">Prediction will appear here</Typography>
