@@ -14,3 +14,5 @@ flask-server/models/
 flask-server/dataset_3.csv
 flask-server/dataset_2.csv
 flask-server/dataset_1.csv
+
+.VSCodeCounter/

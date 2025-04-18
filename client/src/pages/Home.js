@@ -25,37 +25,42 @@ const TARGET_SENTIMENTS = ['very positive', 'positive', 'neutral', 'negative', '
 
 const reviews = [
   {
-    text: "Heartspeak AI helped us identify user sentiment in real-time. Amazing tool!",
+    text: "This hoodie is the softest thing I’ve ever worn. I never want to take it off.",
     name: "Jasmine Patel",
-    role: "Product Manager",
+    role: "Verified Buyer",
+    stars: 5,
     quote: icons8Quote481,
     image: untitledDesign1,
   },
   {
-    text: "A user-friendly interface and insightful analytics. Highly recommend.",
+    text: "The fit of these jeans is unreal—snug in all the right places without being tight.",
     name: "Carlos Rivera",
-    role: "UX Designer",
+    role: "Fashion Enthusiast",
+    stars: 4,
     quote: icons8Quote481,
     image: untitledDesign1,
   },
   {
-    text: "The sentiment tracking feature gave us a new level of customer insight.",
+    text: "Bought the oversized blazer for work and it instantly elevated my whole wardrobe.",
     name: "Elena Smith",
-    role: "Marketing Director",
+    role: "Style Blogger",
+    stars: 5,
     quote: icons8Quote481,
     image: untitledDesign1,
   },
   {
-    text: "Our feedback loop has become much faster and more accurate since using Heartspeak.",
+    text: "These sneakers are not only stylish but insanely comfortable. I wear them everywhere.",
     name: "Daniel Kim",
-    role: "Customer Experience Lead",
+    role: "Sneaker Collector",
+    stars: 4,
     quote: icons8Quote481,
     image: untitledDesign1,
   },
   {
-    text: "Exceptional support and great results. It transformed our communication strategy.",
+    text: "The quality of the stitching and fabric is top-notch. This is premium fashion done right.",
     name: "Leila Zhang",
-    role: "Operations Manager",
+    role: "Luxury Fashion Fan",
+    stars: 5,
     quote: icons8Quote481,
     image: untitledDesign1,
   },
@@ -125,6 +130,15 @@ const ReviewSlider = () => {
               {current.text}
             </p>
 
+          {/* Stars */}
+          <div style={{ marginBottom: "8px" }}>
+            {Array.from({ length: 5 }, (_, i) => (
+              <span key={i} style={{ color: i < current.stars ? "#FFD700" : "#E0E0E0", fontSize: "20px" }}>
+                ★
+              </span>
+            ))}
+          </div>
+          
             <div style={{ textAlign: "right" }}>
               <div style={{ fontWeight: 600, color: "#000" }}>{current.name}</div>
               <div style={{ fontSize: "0.9rem", color: "#828282" }}>{current.role}</div>
